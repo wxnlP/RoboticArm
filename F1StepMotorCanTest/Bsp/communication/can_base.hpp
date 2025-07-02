@@ -5,15 +5,15 @@
 
 typedef struct
 {
-    CAN_FilterTypeDef canFilter;
     CAN_TxHeaderTypeDef txMsg;
     CAN_RxHeaderTypeDef rxMsg;
     uint8_t* pMsgData;
-} CanContext;
+} CanFrame;
 
 class CanBase {
 private:
-    CanContext canContext = {};
+    CanFrame canFrame = {};
+    CAN_FilterTypeDef canFilter = {};
     CAN_HandleTypeDef *canInstance;
 public:
     explicit CanBase(CAN_HandleTypeDef *iCan) : canInstance(iCan){};

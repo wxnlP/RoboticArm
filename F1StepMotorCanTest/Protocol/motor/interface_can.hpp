@@ -26,9 +26,11 @@ typedef enum
 class InterfaceCan
 {
 private:
-    CanContext canContext = {};
+    CanFrame canFrame = {};
     uint8_t cmd_buffer[20] = {};
+    CanBase *canBase;
 public:
+    explicit InterfaceCan(CanBase *iCan) : canBase(iCan){};
     void SendCmd(const uint8_t *cmd, uint8_t length);
 
     void ResetToZero(uint8_t addr);

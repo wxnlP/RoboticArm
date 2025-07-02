@@ -7,9 +7,9 @@
  */
 void AdcBase::Init()
 {
-    HAL_ADCEx_Calibration_Start(&hadc1);
-    HAL_ADC_Start(&hadc1);
-    HAL_ADC_PollForConversion(&hadc1, HAL_MAX_DELAY);
+    HAL_ADCEx_Calibration_Start(adcInstance);
+    HAL_ADC_Start(adcInstance);
+    HAL_ADC_PollForConversion(adcInstance, HAL_MAX_DELAY);
 }
 
 /* @brief  获取ADC模拟值
@@ -18,7 +18,7 @@ void AdcBase::Init()
  */
 uint32_t AdcBase::GetAnalogValue()
 {
-    return HAL_ADC_GetValue(&hadc1);
+    return HAL_ADC_GetValue(adcInstance);
 }
 
 

@@ -1,9 +1,13 @@
 #include "common_inc.h"
 
 /* ---------Objects Initialization-------------------------------------------------------------- */
-// LED初始化
+/* Bsp Objects Initialization */
 LedBase led;
-Voltage voltage;
+AdcBase adcBase(&hadc1);
+
+/* Protocol Objects Initialization */
+Voltage voltage(&adcBase);
+
 
 /* ---------Thread Definitions-------------------------------------------- */
 // LED Thread
@@ -20,7 +24,7 @@ static void ThreadLed(void *arg)
     }
 }
 
-// Voltage Thread
+// Battery Voltage Thread
 osThreadId_t voltageThreadHandle;
 static void ThreadVoltage(void *arg)
 {

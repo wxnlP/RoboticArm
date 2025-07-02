@@ -16,7 +16,6 @@
 
 #include "interface_can.hpp"
 
-static CanBase canBase(&hcan);
 
 void InterfaceCan::SendCmd(const uint8_t* cmd, uint8_t length)
 {
@@ -27,20 +26,20 @@ void InterfaceCan::SendCmd(const uint8_t* cmd, uint8_t length)
     {
         // 记录未发送的数据字节数
         length_ -= i;
-        canContext.txMsg.StdId = 0x00;
+        canFrame.txMsg.StdId = 0x00;
         // 扩展格式的报文ID
-        canContext.txMsg.ExtId = ((uint32_t)cmd[0] << 8) | (uint32_t)pkgsNum;
+        canFrame.txMsg.ExtId = ((uint32_t)cmd[0] << 8) | (uint32_t)pkgsNum;
         // 每次包发送的第一个字节固定为功能码
-        canContext.pMsgData[0] = cmd[1];
-        canContext.txMsg.RTR = CAN_RTR_DATA;
-        canContext.txMsg.IDE = CAN_ID_EXT;
+        canFrame.pMsgData[0] = cmd[1];
+        canFrame.txMsg.RTR = CAN_RTR_DATA;
+        canFrame.txMsg.IDE = CAN_ID_EXT;
         if (length_ < 8)
         {
             // 发生length_个字节数据
             for (j = 0; j < length_; j++, i++)
             {
-                canContext.pMsgData[j + 1] = cmd[j + 2];
-                canContext.txMsg.DLC = length_;
+                canFrame.pMsgData[j + 1] = cmd[j + 2];
+                canFrame.txMsg.DLC = length_;
             }
         }
         else
@@ -48,12 +47,12 @@ void InterfaceCan::SendCmd(const uint8_t* cmd, uint8_t length)
             // 发生8个字节数据
             for (j = 0; j < 7; j++, i++)
             {
-                canContext.pMsgData[j + 1] = cmd[j + 2];
-                canContext.txMsg.DLC = 8;
+                canFrame.pMsgData[j + 1] = cmd[j + 2];
+                canFrame.txMsg.DLC = 8;
             }
         }
         // 发送数据
-        canBase.SendMessage(&canContext.txMsg, canContext.pMsgData);
+        canBase->SendMessage(&canFrame.txMsg, canFrame.pMsgData);
         // 记录发送的第几包数据
         ++pkgsNum;
     }
